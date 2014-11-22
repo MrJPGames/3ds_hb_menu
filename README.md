@@ -58,4 +58,4 @@ hbmenu is looking for contributors ! We're making this repository public so that
 - Arkhandar : graphics
 
 
-- Me : 3D (not official of course!)
+- Me : 3D and making the logo float up and down(not official of course!)
