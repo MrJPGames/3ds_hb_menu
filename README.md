@@ -1,5 +1,8 @@
 # The Homebrew Launcher
 
+#### Why?
+I made this fork to learn more about how graphics work by using alerady made work. If you like 3D it is in here feel free to try this version, see if you like it. Further than looks it will be the same as the original! All original work is done by the Devs listed at the bottom of this document!
+
 #### Presentation
 
 The Homebrew Launcher (hbmenu for short) is the default menu for ninjhax, a 3DS homebrew-enabling exploit released on November 20th 2014. It is a fairly simple (and beautiful) menu that lists homebrew applications and lets you run them.
@@ -53,3 +56,6 @@ hbmenu is looking for contributors ! We're making this repository public so that
 - mtheall : code
 - Fluto : graphics
 - Arkhandar : graphics
+
+
+- Me : 3D (not official of course!)
