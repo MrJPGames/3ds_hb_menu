@@ -71,6 +71,10 @@ void drawBubbles(void)
 		gfxDrawSpriteAlphaBlendFade((bubbles[i].y >= 240) ? (GFX_TOP) : (GFX_BOTTOM), GFX_LEFT, (u8*)bubble_bin, 32, 32, 
 			((bubbles[i].y >= 240) ? -64 : 0) + bubbles[i].y % 240, 
 			((bubbles[i].y >= 240) ? 0 : -40) + bubbles[i].x, bubbles[i].fade);
+		//Maybe just top is enough but gave weird thing just then!
+		gfxDrawSpriteAlphaBlendFade((bubbles[i].y >= 240) ? (GFX_TOP) : (GFX_BOTTOM), GFX_RIGHT, (u8*)bubble_bin, 32, 32, 
+			((bubbles[i].y >= 240) ? -64 : 0) + bubbles[i].y % 240, 
+			((bubbles[i].y >= 240) ? 0 : -40) + bubbles[i].x, bubbles[i].fade);
 	}
 }
 
@@ -133,6 +137,11 @@ void drawBackground(u8 bgColor[3], u8 waterBorderColor[3], u8 waterColor[3])
 	// Finally draw the logo. (in 3D if needed!)
 	//uses x then y (unkown reason?)
 	float slider=CONFIG_3D_SLIDERSTATE;
+	//Animate logo
+	if (yposlogo < 54 && logodir == -1){logodir=1;}
+	if (yposlogo > 74 && logodir == 1){logodir=-1;}
+	yposlogo+=logodir;
+
 	if (!slider > 0){
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)logo_bin, 113, 271, yposlogo, 80);
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)logo_bin, 113, 271, yposlogo, 80);
@@ -140,9 +149,5 @@ void drawBackground(u8 bgColor[3], u8 waterBorderColor[3], u8 waterColor[3])
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)logo_bin, 113, 271, yposlogo, 80+7*slider);
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)logo_bin, 113, 271, yposlogo, 80-7*slider);
 	}
-	if (yposlogo < 54){logodir=1;}
-	if (yposlogo > 74){logodir=-1;}
-
-	yposlogo+=logodir;
 }
 
