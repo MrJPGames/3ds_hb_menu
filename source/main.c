@@ -124,6 +124,7 @@ int main()
 	srvInit();
 	aptInit();
 	gfxInit();
+	gfxSet3D(true);
 	initFilesystem();
 	openSDArchive();
 	hidInit(NULL);

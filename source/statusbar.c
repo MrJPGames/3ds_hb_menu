@@ -37,23 +37,28 @@ void drawStatusBar(bool wifiStatus, bool charging, int batteryLevel)
 	char timeString[9];
 	sprintf(timeString, "%02d:%02d:%02d", hour, min, seconds);
 	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, timeString, 240 - 18, 400 / 2 - 16);
+	gfxDrawText(GFX_TOP, GFX_RIGHT, NULL, timeString, 240 - 18, 400 / 2 - 16);
 
 	if(wifiStatus)
 	{
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)wifi_full_bin, 18, 20, 240 - 18, 0);
+		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)wifi_full_bin, 18, 20, 240 - 18, 0);
 	}
 	else
 	{
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)wifi_none_bin, 18, 20, 240 - 18, 0);
+		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)wifi_none_bin, 18, 20, 240 - 18, 0);
 	}
 
 	if(charging)
 	{
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)battery_charging_bin, 18, 27, 240 - 18, 400 - 27);
+		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)battery_charging_bin, 18, 27, 240 - 18, 400 - 27);
 	}
 	else
 	{
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, batteryLevels[batteryLevel], 18, 27, 240 - 18, 400 - 27);
+		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, batteryLevels[batteryLevel], 18, 27, 240 - 18, 400 - 27);
 	}
 }
 

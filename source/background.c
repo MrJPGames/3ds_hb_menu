@@ -14,9 +14,14 @@
 #define BG_WATER_WIDTH (500)
 #define BG_WATER_OFFSET (0)
 
+#define CONFIG_3D_SLIDERSTATE (*(float*)0x1FF81080)
+
 static bubble_t bubbles[BUBBLE_COUNT];
 static waterEffect_s waterEffect;
 static int backgroundCnt;
+
+int yposlogo=54;
+int logodir=1; //1 is down -1 is up
 
 void initBackground(void)
 {
@@ -113,10 +118,31 @@ void drawBackground(u8 bgColor[3], u8 waterBorderColor[3], u8 waterColor[3])
 	//sub screen stuff
 	gfxFillColorGradient(GFX_BOTTOM, GFX_LEFT, waterColor, waterBorderColor);
 
+
+	//Draw Right eye (same as left eye as only logo is 3D)
+	gfxFillColor(GFX_TOP, GFX_RIGHT, bgColor);
+	gfxDrawWave(GFX_TOP, GFX_RIGHT, waterBorderColor, waterColor, 135, 20, 5, (gfxWaveCallback)&evaluateWater, &waterEffect);
+	gfxDrawWave(GFX_TOP, GFX_RIGHT, waterColor, waterBorderColor, 130, 20, 0, (gfxWaveCallback)&evaluateWater, &waterEffect);
+
+	//sub screen stuff
+	gfxFillColorGradient(GFX_BOTTOM, GFX_RIGHT, waterColor, waterBorderColor);
+
 	// Bubbles belong on both screens so they should be drawn second to last.
 	drawBubbles();
 
-	// Finally draw the logo.
-	gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)logo_bin, 113, 271, 64, 80);
+	// Finally draw the logo. (in 3D if needed!)
+	//uses x then y (unkown reason?)
+	float slider=CONFIG_3D_SLIDERSTATE;
+	if (!slider > 0){
+		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)logo_bin, 113, 271, yposlogo, 80);
+		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)logo_bin, 113, 271, yposlogo, 80);
+	}else{
+		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)logo_bin, 113, 271, yposlogo, 80+7*slider);
+		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)logo_bin, 113, 271, yposlogo, 80-7*slider);
+	}
+	if (yposlogo < 54){logodir=1;}
+	if (yposlogo > 74){logodir=-1;}
+
+	yposlogo+=logodir;
 }
 
