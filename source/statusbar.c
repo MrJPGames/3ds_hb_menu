@@ -21,7 +21,9 @@ u8* batteryLevels[] = {
 	(u8*)battery_mid_high_bin,
 	(u8*)battery_full_bin,
 };
+bool threeD;
 
+#define CONFIG_3D_SLIDERSTATE (*(float*)0x1FF81080)
 #define SECONDS_IN_DAY 86400
 #define SECONDS_IN_HOUR 3600
 #define SECONDS_IN_MINUTE 60
@@ -33,32 +35,37 @@ void drawStatusBar(bool wifiStatus, bool charging, int batteryLevel)
 	u8 hour = dayTime / SECONDS_IN_HOUR;
 	u8 min = (dayTime % SECONDS_IN_HOUR) / SECONDS_IN_MINUTE;
 	u8 seconds = dayTime % SECONDS_IN_MINUTE;
-
+	if (CONFIG_3D_SLIDERSTATE > 0){threeD=true;}else{threeD=false;}
 	char timeString[9];
 	sprintf(timeString, "%02d:%02d:%02d", hour, min, seconds);
 	gfxDrawText(GFX_TOP, GFX_LEFT, NULL, timeString, 240 - 18, 400 / 2 - 16);
-	gfxDrawText(GFX_TOP, GFX_RIGHT, NULL, timeString, 240 - 18, 400 / 2 - 16);
+	if (threeD)
+			gfxDrawText(GFX_TOP, GFX_RIGHT, NULL, timeString, 240 - 18, 400 / 2 - 16);
 
 	if(wifiStatus)
 	{
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)wifi_full_bin, 18, 20, 240 - 18, 0);
-		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)wifi_full_bin, 18, 20, 240 - 18, 0);
+		if (threeD)
+			gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)wifi_full_bin, 18, 20, 240 - 18, 0);
 	}
 	else
 	{
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)wifi_none_bin, 18, 20, 240 - 18, 0);
-		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)wifi_none_bin, 18, 20, 240 - 18, 0);
+		if (threeD)
+			gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)wifi_none_bin, 18, 20, 240 - 18, 0);
 	}
 
 	if(charging)
 	{
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)battery_charging_bin, 18, 27, 240 - 18, 400 - 27);
-		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)battery_charging_bin, 18, 27, 240 - 18, 400 - 27);
+		if (threeD)
+			gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)battery_charging_bin, 18, 27, 240 - 18, 400 - 27);
 	}
 	else
 	{
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, batteryLevels[batteryLevel], 18, 27, 240 - 18, 400 - 27);
-		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, batteryLevels[batteryLevel], 18, 27, 240 - 18, 400 - 27);
+		if (threeD)
+			gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, batteryLevels[batteryLevel], 18, 27, 240 - 18, 400 - 27);
 	}
 }
 

@@ -64,7 +64,7 @@ void renderFrame(u8 bgColor[3], u8 waterBorderColor[3], u8 waterColor[3])
 			"    Something unexpected happened when trying to mount your SD card.\n"
 			"    Try taking it out and putting it back in. If that doesn't work,\n"
 			"please try again with another SD card.");
-	}else{
+	}else if (sdmcCurrent){
 		//got SD
 		drawMenu(&menu);
 	}
@@ -198,6 +198,7 @@ int main()
 		{
 			if(rebootCounter<0)rebootCounter=0;
 			gfxFadeScreen(GFX_TOP, GFX_LEFT, rebootCounter);
+			gfxFadeScreen(GFX_TOP, GFX_RIGHT, rebootCounter);
 			gfxFadeScreen(GFX_BOTTOM, GFX_BOTTOM, rebootCounter);
 			if(rebootCounter>0)rebootCounter-=6;
 		}

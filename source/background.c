@@ -73,9 +73,11 @@ void drawBubbles(void)
 			((bubbles[i].y >= 240) ? -64 : 0) + bubbles[i].y % 240, 
 			((bubbles[i].y >= 240) ? 0 : -40) + bubbles[i].x, bubbles[i].fade);
 		//Maybe just top is enough but gave weird thing just then!
-		gfxDrawSpriteAlphaBlendFade((bubbles[i].y >= 240) ? (GFX_TOP) : (GFX_BOTTOM), GFX_RIGHT, (u8*)bubble_bin, 32, 32, 
-			((bubbles[i].y >= 240) ? -64 : 0) + bubbles[i].y % 240, 
-			((bubbles[i].y >= 240) ? 0 : -40) + bubbles[i].x, bubbles[i].fade);
+		if (CONFIG_3D_SLIDERSTATE > 0){
+			gfxDrawSpriteAlphaBlendFade((bubbles[i].y >= 240) ? (GFX_TOP) : (GFX_BOTTOM), GFX_RIGHT, (u8*)bubble_bin, 32, 32, 
+				((bubbles[i].y >= 240) ? -64 : 0) + bubbles[i].y % 240, 
+				((bubbles[i].y >= 240) ? 0 : -40) + bubbles[i].x, bubbles[i].fade);
+		}
 	}
 }
 
@@ -114,6 +116,17 @@ void updateBackground(void)
 
 void drawBackground(u8 bgColor[3], u8 waterBorderColor[3], u8 waterColor[3])
 {
+	
+
+	// Finally draw the logo. (in 3D if needed!)
+	//uses x then y (unkown reason?)
+	float slider=CONFIG_3D_SLIDERSTATE;
+	//Animate logo
+	if (yposlogo < 64){logodir=1;}
+	if (yposlogo > 64){logodir=-1;}
+	if (logodir == 1 && logomov < 0.75){logomov+=0.025;}
+	if (logodir == -1 && logomov > -0.75){logomov-=0.025;}
+	yposlogo+=logomov;
 	//top screen stuff
 	//gfxFillColorGradient(GFX_TOP, GFX_LEFT, waterBorderColor, waterColor);
 	gfxFillColor(GFX_TOP, GFX_LEFT, bgColor);
@@ -123,35 +136,15 @@ void drawBackground(u8 bgColor[3], u8 waterBorderColor[3], u8 waterColor[3])
 	//sub screen stuff
 	gfxFillColorGradient(GFX_BOTTOM, GFX_LEFT, waterColor, waterBorderColor);
 
-
-	
-
-	// Bubbles belong on both screens so they should be drawn second to last.
-
-	// Finally draw the logo. (in 3D if needed!)
-	//uses x then y (unkown reason?)
-	float slider=CONFIG_3D_SLIDERSTATE;
-	//Animate logo
-	if (yposlogo < 59){logodir=1;}
-	if (yposlogo > 69){logodir=-1;}
-	if (logodir == 1 && logomov < 0.75){logomov+=0.025;}
-	if (logodir == -1 && logomov > -0.75){logomov-=0.025;}
-	yposlogo+=logomov;
-
+	drawBubbles();
 	if (!slider > 0){
-
-		drawBubbles();
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)logo_bin, 113, 271, yposlogo, 80);
 	}else{
-		//Draw Right eye (same as left eye as only logo is 3D)
-		gfxFillColor(GFX_TOP, GFX_RIGHT, bgColor);
-		gfxDrawWave(GFX_TOP, GFX_RIGHT, waterBorderColor, waterColor, 135, 20, 5, (gfxWaveCallback)&evaluateWater, &waterEffect);
-		gfxDrawWave(GFX_TOP, GFX_RIGHT, waterColor, waterBorderColor, 130, 20, 0, (gfxWaveCallback)&evaluateWater, &waterEffect);
-
-		//sub screen stuff
-		gfxFillColorGradient(GFX_BOTTOM, GFX_RIGHT, waterColor, waterBorderColor);
-		drawBubbles();
-		//Draw Logo
+		u16 fbWidth, fbHeight;
+		u8* fbLeft=gfxGetFramebuffer(GFX_TOP, GFX_LEFT, &fbWidth, &fbHeight);
+		u8* fbRight=gfxGetFramebuffer(GFX_TOP, GFX_RIGHT, &fbWidth, &fbHeight);
+		memcpy(fbRight, fbLeft, 400*240*3); //Copy left fb to right fb
+		//Draw Logo in 3D!
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_LEFT, (u8*)logo_bin, 113, 271, yposlogo, 80+7*slider);
 		gfxDrawSpriteAlphaBlend(GFX_TOP, GFX_RIGHT, (u8*)logo_bin, 113, 271, yposlogo, 80-7*slider);
 	}
